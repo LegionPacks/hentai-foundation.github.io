@@ -1,9 +1,8 @@
-# hentai.foundation
+# ORIE Review Sheets
 
-The most basic file uploader lol
+A collection of review sheets for various courses in Cornell's ORIE department, including:
 
-Literally uses git to upload files lmfao
-
-since i don't want to use a password every time, it is for me only :sunglasses: i will ssh !!
-
-gamer time
+- ORIE 3120
+- ORIE 3310
+- ORIE 3510
+- ...and more, potentially, depending on how long this site is used.
