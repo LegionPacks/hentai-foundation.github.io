@@ -1,0 +1,33 @@
+---
+title: ORIE 3310
+author: The Hentai Foundation
+output:
+        html_document:
+                df_print: paged
+        pdf_document:
+                includes:
+                        in_header: ~/.preamble.tex
+                latex_engine: xelatex
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(reticulate)
+use_python("/usr/bin/python3")
+```
+
+# Description
+
+ORIE 3310, "Optimization II", mostly centers around the following topics (according to the syllabus):
+
+ - **Network optimization**: Minimum-cost network flow, maximum flow, Ford-Fulkerson algorithm; the shortest-path problem, the assignment problem, the Hungarian algorithm
+ - **Dynamic programming**: Bellman equation, principle of optimality; applications to the knapsack problem, the shortest-path problem, inventory planning; stochastic dynamic programming
+ - **Integer programming**: Formulation and modeling; Branch and bound, cutting planes, constraint generation for solving large-scale problems
+ - **Nonlinear optimization**: Newton's Method, KKT condition, Interior-point method
+
+This course uses AMPL ("A Mathematical Programming Language") extensively. 
+
+
+
+

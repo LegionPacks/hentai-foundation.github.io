@@ -1,0 +1,36 @@
+---
+title: ORIE 3510
+author: The Hentai Foundation
+output:
+        html_document:
+                df_print: paged
+        pdf_document:
+                includes:
+                        in_header: ~/.preamble.tex
+                latex_engine: xelatex
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(reticulate)
+use_python("/usr/bin/python3")
+```
+
+# Description
+
+ORIE 3510, "Introduction to Engineering Stochastic Processes I", focuses on discrete-time Markov chains (DTMCs), Poisson processes, and continuous-time Markov chains, and their applications to manufacturing and service systems, data center operations, ride-sharing platforms, and hospital operations. (Or so the syllabus says.)
+
+The topics covered include:
+
+ - Newsvendor problems (perishable items)
+ - DTMCs (non-perishable items and many other systems)
+ - Poisson processes, exponential RVs
+ - Continuous-time Markov chains
+ - Queueing models, Little's law, open queueing networks, and closed queueing networks
+ - Applications to production systems, customer call centers, hospital patient flow models, and ride-sharing platforms
+ - Martingales and optional sampling theorem
+ - Introduction to MDP and reinforcement learning
+
+
+

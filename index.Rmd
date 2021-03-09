@@ -1,0 +1,32 @@
+---
+title: Hentai.Foundation
+author: The Hentai Foundation
+date: \today
+output:
+        html_document:
+                df_print: paged
+        pdf_document:
+                includes:
+                        in_header: ~/.preamble.tex
+                latex_engine: xelatex
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(reticulate)
+use_python("/usr/bin/python3")
+```
+
+This website is dedicated to hosting review sheets and other material related to Cornell's core undergraduate ORIE classes, including:
+
+ - [ORIE 3120](https://hentai.foundation/ORIE3120)
+ - [ORIE 3310](https://hentai.foundation/ORIE3310)
+ - [ORIE 3510](https://hentai.foundation/ORIE3510)
+ - ...and more, perhaps, in the future.
+
+
+
+
+
+

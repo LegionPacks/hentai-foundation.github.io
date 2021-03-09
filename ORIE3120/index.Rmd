@@ -1,0 +1,26 @@
+---
+title: ORIE 3120
+author: The Hentai Foundation
+output:
+        html_document:
+                df_print: paged
+        pdf_document:
+                includes:
+                        in_header: ~/.preamble.tex
+                latex_engine: xelatex
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(reticulate)
+use_python("/usr/bin/python3")
+```
+
+# Description
+
+ORIE 3120, "Practical Tools for Operations Research, Machine Learning, and Data Science" has a rather self-explanatory name. [Here](https://people.orie.cornell.edu/pfrazier/orie3120/) is the course website, which has all the relevant resources. (Note that this page refers to the 2021 Spring semester and may be outdated for future semesters.)
+
+
+
+
