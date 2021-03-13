@@ -1,0 +1,603 @@
+---
+title: "ORIE 3120 Prelim 1 Review"
+author: "The Hentai Foundation"
+date: "March 12, 2021"
+mainfont: "Avenir LT Std"
+header-includes: |
+  \usepackage{tikz}
+  \usepackage{graphicx}
+  \usepackage[utf8]{inputenc}
+output:
+  html_document:
+    toc: true
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# SQLite Basics
+
+## Basic Queries
+
+### SELECT
+
+Example: 
+
+```SQL
+SELECT columnName1, columnName2
+FROM tableName
+```
+Tip: `SELECT *` gives all columns
+
+### WHERE
+
+Example: 
+
+```SQL
+SELECT *
+FROM tableName
+WHERE columnName1 = "Chad"
+```
+
+Other useful operations (besides `=`) include: `!=`, `>=`, `<=`, etc.
+
+The operator `=` is functionally equivalent to the use of the `IS` keyword, as in 
+```SQL
+WHERE columnName1 IS 2014
+```
+
+### AND/OR
+
+Example: 
+
+```SQL
+SELECT *
+FROM tableName
+WHERE ( columnName1 IS 2014 OR 2015)
+  AND columnName2 IS "Boris" 
+```
+
+Note that `AND` takes operator precedence over `OR`, so be sure to explicitly enclose `OR` expressions in parentheses if they are to be evaluated first.
+
+### Misc. mathematical/utility functions
+
+  - ROUND: `ROUND(Price, 1)` rounds `Price` to 1 digit past the decimal
+    - In order to use floats, divide by 1.0
+    - To round to the nearest 10, do `(10 * ROUND(value/10.0))`
+  - ABS: `ABS(value)` takes the absolute value of `value`
+  - MAX: `MAX(col1)` returns the maximum of the values in `col1`
+  - MIN: `MIN(col1)` returns the minimum of the values in `col1`
+  - AVG: `AVG(col1)` returns the average of all of the values in `col1`
+  - SUM: `SUM(col1)` returns the sum of all the values in `col1`
+  - TOTAL: `TOTAL(col1)` returns the sum of all the values in `col1`
+    - The only difference between `SUM` and `TOTAL` is that when all of the rows passed to `SUM` are `NULL`, `SUM` returns `NULL`. When all of the rows in a column passed to `TOTAL` are `NULL`, `TOTAL` returns 0.
+  - COUNT: `COUNT(column)` returns the number of entries in the column
+  - GROUP_CONCAT: `GROUP_CONCAT(col1, sep)` returns the concatenation of all non-null values in `col1`, separated by `sep`. If no separator is provided, "," (comma) is used by default
+  
+General example:
+
+```SQL
+SELECT MAX(tableName.col1)
+FROM tableName
+```
+
+More general example:
+
+**Input**
+
+| A | B |
+|---|---|
+| 1 | 1 |
+| 1 | 2 |
+| 1 | 3 |
+| 2 | 1 |
+| 3 | 1 |
+
+**Output**
+
+| A | SUM(B) | AVG(B) | MAX(B) | MIN(B) | GROUP_CONCAT(B) |
+|---|--------|--------|--------|--------|-----------------|
+| 1 | 6      | 2      | 3      | 1      | 1,2,3           |
+| 2 | 1      | 1      | 1      | 1      | 1               |
+| 3 | 1      | 1      | 1      | 1      | 1               |
+
+## String Manipulation
+
+### LTRIM, RTRIM, and TRIM
+
+#### LTRIM
+
+Example:
+
+```SQL
+LTRIM(poverty.country, "ABCDEabcdefgh")
+```
+
+Input to and output from above query:
+
+| input   | output|
+|-|-|
+| Canada  | nada  |
+| Chad    |       |
+| Denmark | nmark |
+| Cyprus  | yprus |
+
+`LTRIM` trims all characters from the **left** that match the specification given as the second argument, and stops when it reaches a character not present in the given matching list.
+
+Tip: avoid using two `LTRIM` statements with `OR`: 
+```SQL
+LTRIM(data, "A" OR "B")
+```
+#### RTRIM
+
+```SQL
+RTRIM(poverty.country, "ABCDEabcdefgh")
+```
+
+Input to and output from above query:
+
+| input   | output|
+|-|-|
+| Canada  | Can  |
+| Chad    |       |
+| Denmark | Denmark |
+| Cyprus  | Cyprus |
+
+`RTRIM` trims all characters from the **right** that match the specification given as the second argument, and stops when it reaches a character not present in the given matching list.
+
+Tip: in order to take "A" or "B" off of the back of a word, simply pass "AB" as the argument. If only one word ends in "AB", just use a `CASE WHEN` statement to handle it.
+
+#### TRIM
+
+The `TRIM` function removes characters from both ends of a string. 
+
+Examples:
+
+```SQL
+TRIM("!HELLO#", "!#")
+
+TRIM("00000000001230000000000", "0")
+
+TRIM("131232323131231232312323h2uhu3h2313123123123123", "123")
+```
+
+The above examples return "Hello", "123", and "h2uhu3h" respectively.
+
+When `TRIM` is not passed a second argument, it just strips whitespace from both ends of the string.
+
+### SUBSTR
+
+Example: 
+
+```SQL
+SUBSTR(columns, 2, 8)
+```
+
+| input              | output   |
+|--------------------|----------|
+| 10 boxes x 20 bags | 0 boxes  |
+| 1 kg pkg.           |  kg pkg.  |
+| 2 kg box           |  kg box  |
+| 24 - 12 oz bottles | 4 - 12 o |
+
+This substring query **starts in space 2** and then **goes up to and includes space 9**. This is because the `SUBSTR` function has a **start** parameter and a **length** parameter, instead of the usual start and **end** parameters We see in other languages. We compare the SQL and Python string slicing below. Variables "a" and "b" are the same, and we slice an equal portion of the string "text" in each command:
+
+```SQL
+SUBSTR(text, a, b)
+```
+
+```python
+x = text[a:a+b]
+```
+
+Another `SUBSTR` example:
+
+```SQL
+SUBSTR(columns, -2, 2)
+```
+
+| input              | output   |
+|--------------------|----------|
+| 10 boxes x 20 bags | gs  |
+| 1 kg pkg.           | g.  |
+| 2 kg box           | ox  |
+| 24 - 12 oz bottles | es |
+
+
+### Misc. string functions
+
+  - UPPER: `UPPER(column)` makes the entire column uppercase
+  - LENGTH: `LENGTH(column)` returns the length of each entry
+  - SUBSTR and LENGTH: `SUBSTR(columns, 1, LENGTH(columns)-1)` takes off the last letter of each word
+  
+**String concatenation** in SQLite takes the form of the **concatenate operator**, `||`. This is the same as the "or" operator in Java. 
+
+Example:
+
+```SQL
+name1 || name2  -- this returns "name1name2"
+```
+
+## CASE WHEN, AS 
+
+Example:
+
+```SQL
+CASE WHEN SUBSTR(column, 1, 11) = "Afghanistan" THEN SUBSTR(column, 2, 10000)
+WHEN SUBSTR(column, 1, 1) = "A" THEN SUBSTR(column, 1, length(column) - 1)
+WHEN SUBSTR(column, 1, 2) = "B" THEN "Konkey Dong"
+ELSE column END AS colnew
+```
+
+A `CASE WHEN` statement starts with `CASE WHEN`. Then, we check against some number of conditions with the above-demonstrated syntax; after each `WHEN` there is a logical expression whose validity we check. If this expression evaluates to false, we continue; otherwise, we go to the `THEN` portion and set our value to the value specified therein. 
+
+The `END AS` portion tells the `CASE WHEN` statement that it is done (the `END` part), and that this column should be called "colnew" (the `AS` portion).
+
+Tip: we can also use `NULL` as a general `ELSE`, as nothing is equal to `NULL` for any comparison operator. 
+
+A more common use of the `AS` keyword is in naming columns while selecting them, as in this example:
+
+```SQL
+SELECT coluumn1, newcol1, newcol2, newcol3
+FROM (
+  SELECT *,
+    column1 AS newcol1, 
+    ROUND(column1, 2) AS newcol2,
+    MAX(column1) * 7 - 1 AS newcol3, 
+  FROM tablename
+  WHERE 
+    year IS 2014 AND
+    column1 IS NOT NULL
+)
+```
+
+Tip: remember to include the commas! They are a huge fucking pain in the ass to troubleshoot.
+
+
+## Using the Text Editor
+
+The text editor differs from a view in that it can be used to edit data sets, by inserting and deleting values (and columns -- see "Updating/Altering Data" below). 
+
+Examples:
+
+```SQL
+INSERT INTO database(country, poverty_190)
+VALUES("Stan", 69)
+```
+
+```SQL
+DELETE FROM database
+WHERE country = "Stan" OR country = "Stan2"
+```
+
+## ORDER BY
+
+Examples of single-column `ORDER BY`s:
+
+```SQL
+SELECT UnitPrice, ProductName
+FROM UnitPrice
+ORDER BY UnitPrice DESC
+```
+
+Tip: use `DESC` to order from "greatest" to "lowest" (or in reverse alphabetical order for strings); use `ASC` to do the opposite.
+
+```SQL
+SELECT UnitPrice, ProductName, UnitPrice * ProductName
+FROM Products
+ORDER BY UnitsInStock * UnitPrice DESC
+```
+
+Tip: instead of using the name of the column, we can also use the index of the column in the table. For instance, if UnitsInStock was the 5th column, we could have instead written `...ORDER BY 5 * UnitPrice DESC`.
+
+```SQL
+SELECT ProductsA, UnitPrice, ProductsA * UnitPrice AS InValue
+FROM Products
+ORDER BY InValue DESC
+```
+
+Example of bi-column `ORDER BY`:
+
+```SQL
+SELECT ProductA, ProductB
+FROM Products
+ORDER BY 2 ASC, 1 DESC
+```
+
+The above query first sorts ascending by ProductB, and then sorts descending by ProductA. With multiple column `ORDER BY`s, the secondary (tertiary, quaternary, etc.) sorting is done **within the previously sorted blocks**. An example would be tedious to concoct and is thus omitted. 
+
+## GROUP BY
+
+The SQLite `GROUP BY` command aggregates records by a given column and returns the results of the aggregation. Aggregation can mean any of the following:
+
+  - Adds the records
+  - Averages the records
+  - Shows the max of the columns
+  - etc.
+  
+An example of a `GROUP BY` sum follows:
+
+**Before**
+
+| col1 | col2 |
+|------|------|
+| 1    | 7    |
+| 1    | 8    |
+| 3    | 9    |
+| 3    | 4    |
+| 3    | 8    |
+| 6    | 3    |
+
+**After**
+
+| col1 | col2 |
+|------|------|
+| 1    | 15   |
+| 3    | 21   |
+| 6    | 3    |
+
+Another example:
+
+```SQL
+SELECT 
+  country,
+  n_poverty_190,
+  n_poverty_320,
+  n_poverty_550,
+  SUM(n_poverty_190, n_poverty_320, n_poverty_550) AS p5
+FROM poverty
+WHERE n_poverty_190 IS NOT NULL
+GROUP BY country
+ORDER BY ps DESC
+```
+
+The `SUM` function above creates "ps", where countries' poverties over all years and categories are summed and grouped.
+
+The `SUM` function could be replaced by any of `COUNT`, `AVG`, `MAX`, `MIN`, or `GROUP_CONCAT`, to form a different valid query. 
+
+Similarly to `ORDER BY`, `GROUP BY` can be used on multiple columns. 
+
+Multi-column example:
+
+```SQL
+SELECT 
+  cat1, 
+  cat2,
+  SUM(cat1) AS sum1,
+  SUM(cat2) AS sum2
+FROM table
+GROUP BY cat1, cat2
+HAVING SUM(cat1) > 5
+```
+
+The `HAVING` keyword in the above query is the `GROUP BY` analogue of the `WHERE` keyword.
+
+## Updating/Altering Data
+
+As previously mentioned in the Text Editor section, we cannot edit data in views -- only in the SQL Query Editor. 
+
+### Creating a table
+
+Example table creation:
+
+```SQL
+CREATE TABLE TableName (
+  ProductID INTEGER PRIMARY KEY,
+  Column1 VARCHAR(25),
+  Cost NUMBER(6,2)
+)
+```
+
+Let's unpack the functions each of the keywords in the above example have:
+
+  - `CREATE TABLE`: creates the table TableName (obviously)
+  - `INTEGER`: tells SQLite that ProductID is of type Integer
+  - `PRIMARY KEY`: designates ProductID as the primary key of table "TableName"
+  - `VARCHAR`: tells SQLite that Column1 is a string of max length 25
+  - `NUMBER`: tells SQLite that Cost can contain numbers of 6 digits max, 2 of which can be after the decimal point
+
+### Updating a table
+
+Example table updating (row adding):
+
+```SQL
+INSERT INTO poverty
+  SELECT 
+    columnName || "E",       -- appends "E" to columnName
+    "Epified" || country,   -- prepends "E" to country
+    n_poverty_190 + 100,    -- adds 100 to n_poverty_190
+    n_poverty_320 + 101,
+    n_poverty_550 + 17,
+    population
+  FROM poverty
+```
+
+The above example creates the new observations columnName || "E", "Epified" || country, etc. and adds them to the poverty database.
+
+Example table updating (altering):
+
+```
+UPDATE poverty SET 
+  columnName = "Barkachistan"
+WHERE n_poverty_190 > 0.3
+```
+
+The above example sets the values of columnName to "Barkachistan" if n_poverty_190 is above 0.3.
+
+## Aggregates
+
+Example creation of a "counter":
+
+```SQL
+SELECT COUNT(colName)
+FROM tableName
+AS counter
+```
+
+Note that `GROUP BY` for two categories demarcates breakdown like so:
+
+| 1   | 2   |
+|-----|-----|
+| c1a | c2a |
+| c1a | c2b |
+| c1b | c2a |
+| c1b | c2b |
+
+This groups by both categories. Note that grouping by every column is like no grouping at all.
+
+Tip: `MIN(text_field)` selects text that would appear first if the column were ordered by `ASC` (ascending alphabetically).
+
+
+# Joins
+
+
+## Types of Joins
+
+
+## Join Syntax
+
+
+## Multi-table Joins
+
+
+## Self-joins
+
+
+## Misc. join-related functions
+
+
+# Keys and Schema
+
+## Primary and Foreign Keys
+
+
+## Referential Integrity
+
+
+## Schema Design
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
