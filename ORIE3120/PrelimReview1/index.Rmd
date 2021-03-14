@@ -3,7 +3,7 @@ title: "ORIE 3120 Prelim 1 Review"
 author: "The Hentai Foundation"
 date: "March 12, 2021"
 mainfont: "Avenir LT Std"
-header-includes: |
+header-includes:  
   \usepackage{tikz}
   \usepackage{graphicx}
   \usepackage[utf8]{inputenc}
@@ -29,7 +29,7 @@ Example:
 SELECT columnName1, columnName2
 FROM tableName
 ```
-Tip: `SELECT *` gives all columns
+> Tip: `SELECT *` gives all columns
 
 ### WHERE
 
@@ -75,6 +75,7 @@ Note that `AND` takes operator precedence over `OR`, so be sure to explicitly en
     - The only difference between `SUM` and `TOTAL` is that when all of the rows passed to `SUM` are `NULL`, `SUM` returns `NULL`. When all of the rows in a column passed to `TOTAL` are `NULL`, `TOTAL` returns 0.
   - COUNT: `COUNT(column)` returns the number of entries in the column
   - GROUP_CONCAT: `GROUP_CONCAT(col1, sep)` returns the concatenation of all non-null values in `col1`, separated by `sep`. If no separator is provided, "," (comma) is used by default
+  - UNION and UNION ALL: `A UNION ALL B` returns all records from both A and B including duplicates; `A UNION B` returns all records from A and B and removes duplicates
   
 General example:
 
@@ -87,21 +88,21 @@ More general example:
 
 **Input**
 
-| A | B |
-|---|---|
-| 1 | 1 |
-| 1 | 2 |
-| 1 | 3 |
-| 2 | 1 |
-| 3 | 1 |
+  A   B  
+ --- --- 
+  1   1  
+  1   2  
+  1   3  
+  2   1  
+  3   1  
 
 **Output**
 
-| A | SUM(B) | AVG(B) | MAX(B) | MIN(B) | GROUP_CONCAT(B) |
-|---|--------|--------|--------|--------|-----------------|
-| 1 | 6      | 2      | 3      | 1      | 1,2,3           |
-| 2 | 1      | 1      | 1      | 1      | 1               |
-| 3 | 1      | 1      | 1      | 1      | 1               |
+  A   SUM(B)   AVG(B)   MAX(B)   MIN(B)   GROUP_CONCAT(B)  
+ --- -------- -------- -------- -------- ----------------- 
+  1   6        2        3        1        1,2,3            
+  2   1        1        1        1        1                
+  3   1        1        1        1        1                
 
 ## String Manipulation
 
@@ -117,19 +118,21 @@ LTRIM(poverty.country, "ABCDEabcdefgh")
 
 Input to and output from above query:
 
-| input   | output|
-|-|-|
-| Canada  | nada  |
-| Chad    |       |
-| Denmark | nmark |
-| Cyprus  | yprus |
+  input     output 
+  -----     ------ 
+  Canada    nada   
+  Chad             
+  Denmark   nmark  
+  Cyprus    yprus  
 
 `LTRIM` trims all characters from the **left** that match the specification given as the second argument, and stops when it reaches a character not present in the given matching list.
 
-Tip: avoid using two `LTRIM` statements with `OR`: 
+> Tip: avoid using two `LTRIM` statements with `OR`, like so: 
+
 ```SQL
 LTRIM(data, "A" OR "B")
 ```
+
 #### RTRIM
 
 ```SQL
@@ -138,16 +141,16 @@ RTRIM(poverty.country, "ABCDEabcdefgh")
 
 Input to and output from above query:
 
-| input   | output|
-|-|-|
-| Canada  | Can  |
-| Chad    |       |
-| Denmark | Denmark |
-| Cyprus  | Cyprus |
+  input     output 
+  -----     ------ 
+  Canada    Can   
+  Chad             
+  Denmark   Denmark  
+  Cyprus    Cyprus  
 
 `RTRIM` trims all characters from the **right** that match the specification given as the second argument, and stops when it reaches a character not present in the given matching list.
 
-Tip: in order to take "A" or "B" off of the back of a word, simply pass "AB" as the argument. If only one word ends in "AB", just use a `CASE WHEN` statement to handle it.
+> Tip: in order to take "A" or "B" off of the back of a word, simply pass "AB" as the argument. If only one word ends in "AB", just use a `CASE WHEN` statement to handle it.
 
 #### TRIM
 
@@ -175,12 +178,12 @@ Example:
 SUBSTR(columns, 2, 8)
 ```
 
-| input              | output   |
-|--------------------|----------|
-| 10 boxes x 20 bags | 0 boxes  |
-| 1 kg pkg.           |  kg pkg.  |
-| 2 kg box           |  kg box  |
-| 24 - 12 oz bottles | 4 - 12 o |
+  input                output    
+ -------------------- ---------- 
+  10 boxes x 20 bags   0 boxes   
+  1 kg pkg.              kg pkg.   
+  2 kg box              kg box   
+  24 - 12 oz bottles   4 - 12 o  
 
 This substring query **starts in space 2** and then **goes up to and includes space 9**. This is because the `SUBSTR` function has a **start** parameter and a **length** parameter, instead of the usual start and **end** parameters We see in other languages. We compare the SQL and Python string slicing below. Variables "a" and "b" are the same, and we slice an equal portion of the string "text" in each command:
 
@@ -198,12 +201,12 @@ Another `SUBSTR` example:
 SUBSTR(columns, -2, 2)
 ```
 
-| input              | output   |
-|--------------------|----------|
-| 10 boxes x 20 bags | gs  |
-| 1 kg pkg.           | g.  |
-| 2 kg box           | ox  |
-| 24 - 12 oz bottles | es |
+  input                output    
+ -------------------- ---------- 
+  10 boxes x 20 bags   gs   
+  1 kg pkg.             g.   
+  2 kg box             ox   
+  24 - 12 oz bottles   es  
 
 
 ### Misc. string functions
@@ -212,12 +215,12 @@ SUBSTR(columns, -2, 2)
   - LENGTH: `LENGTH(column)` returns the length of each entry
   - SUBSTR and LENGTH: `SUBSTR(columns, 1, LENGTH(columns)-1)` takes off the last letter of each word
   
-**String concatenation** in SQLite takes the form of the **concatenate operator**, `||`. This is the same as the "or" operator in Java. 
+**String concatenation** in SQLite takes the form of the **concatenate operator**, `  `. This is the same as the "or" operator in Java. 
 
 Example:
 
 ```SQL
-name1 || name2  -- this returns "name1name2"
+name1    name2  -- this returns "name1name2"
 ```
 
 ## CASE WHEN, AS 
@@ -235,7 +238,7 @@ A `CASE WHEN` statement starts with `CASE WHEN`. Then, we check against some num
 
 The `END AS` portion tells the `CASE WHEN` statement that it is done (the `END` part), and that this column should be called "colnew" (the `AS` portion).
 
-Tip: we can also use `NULL` as a general `ELSE`, as nothing is equal to `NULL` for any comparison operator. 
+> Tip: we can also use `NULL` as a general `ELSE`, as nothing is equal to `NULL` for any comparison operator. 
 
 A more common use of the `AS` keyword is in naming columns while selecting them, as in this example:
 
@@ -253,7 +256,7 @@ FROM (
 )
 ```
 
-Tip: remember to include the commas! They are a huge fucking pain in the ass to troubleshoot.
+> Tip: remember to include the commas! They are a huge fucking pain in the ass to troubleshoot.
 
 
 ## Using the Text Editor
@@ -282,7 +285,7 @@ FROM UnitPrice
 ORDER BY UnitPrice DESC
 ```
 
-Tip: use `DESC` to order from "greatest" to "lowest" (or in reverse alphabetical order for strings); use `ASC` to do the opposite.
+> Tip: use `DESC` to order from "greatest" to "lowest" (or in reverse alphabetical order for strings); use `ASC` to do the opposite.
 
 ```SQL
 SELECT UnitPrice, ProductName, UnitPrice * ProductName
@@ -290,7 +293,7 @@ FROM Products
 ORDER BY UnitsInStock * UnitPrice DESC
 ```
 
-Tip: instead of using the name of the column, we can also use the index of the column in the table. For instance, if UnitsInStock was the 5th column, we could have instead written `...ORDER BY 5 * UnitPrice DESC`.
+> Tip: instead of using the name of the column, we can also use the index of the column in the table. For instance, if UnitsInStock was the 5th column, we could have instead written `...ORDER BY 5 * UnitPrice DESC`.
 
 ```SQL
 SELECT ProductsA, UnitPrice, ProductsA * UnitPrice AS InValue
@@ -321,22 +324,22 @@ An example of a `GROUP BY` sum follows:
 
 **Before**
 
-| col1 | col2 |
-|------|------|
-| 1    | 7    |
-| 1    | 8    |
-| 3    | 9    |
-| 3    | 4    |
-| 3    | 8    |
-| 6    | 3    |
+  col1   col2  
+ ------ ------ 
+  1      7     
+  1      8     
+  3      9     
+  3      4     
+  3      8     
+  6      3     
 
 **After**
 
-| col1 | col2 |
-|------|------|
-| 1    | 15   |
-| 3    | 21   |
-| 6    | 3    |
+  col1   col2  
+ ------ ------ 
+  1      15    
+  3      21    
+  6      3     
 
 Another example:
 
@@ -405,8 +408,8 @@ Example table updating (row adding):
 ```SQL
 INSERT INTO poverty
   SELECT 
-    columnName || "E",       -- appends "E" to columnName
-    "Epified" || country,   -- prepends "E" to country
+    columnName    "E",       -- appends "E" to columnName
+    "Epified"    country,   -- prepends "E" to country
     n_poverty_190 + 100,    -- adds 100 to n_poverty_190
     n_poverty_320 + 101,
     n_poverty_550 + 17,
@@ -414,7 +417,7 @@ INSERT INTO poverty
   FROM poverty
 ```
 
-The above example creates the new observations columnName || "E", "Epified" || country, etc. and adds them to the poverty database.
+The above example creates the new observations columnName    "E", "Epified"    country, etc. and adds them to the poverty database.
 
 Example table updating (altering):
 
@@ -425,6 +428,8 @@ WHERE n_poverty_190 > 0.3
 ```
 
 The above example sets the values of columnName to "Barkachistan" if n_poverty_190 is above 0.3.
+
+> Tip: if you want to create a table with a name that is a keyword, you need to escape it with either brackets (`[keyword]`) or quotes (`"keyword"`). SQLite documentation recommends the use of quotes over brackets, since quotes are standard SQL.
 
 ## Aggregates
 
@@ -438,16 +443,16 @@ AS counter
 
 Note that `GROUP BY` for two categories demarcates breakdown like so:
 
-| 1   | 2   |
-|-----|-----|
-| c1a | c2a |
-| c1a | c2b |
-| c1b | c2a |
-| c1b | c2b |
+  1     2    
+ ----- ----- 
+  c1a   c2a  
+  c1a   c2b  
+  c1b   c2a  
+  c1b   c2b  
 
 This groups by both categories. Note that grouping by every column is like no grouping at all.
 
-Tip: `MIN(text_field)` selects text that would appear first if the column were ordered by `ASC` (ascending alphabetically).
+> Tip: `MIN(text_field)` selects text that would appear first if the column were ordered by `ASC` (ascending alphabetically).
 
 
 # Joins
@@ -455,34 +460,318 @@ Tip: `MIN(text_field)` selects text that would appear first if the column were o
 
 ## Types of Joins
 
+There are four main types of joins: Inner Joins, Left Joins, Right Join, and Full Outer Joins. Venn Diagrams follow for each.
+
+### Inner Joins
+
+Diagram:
+
+![](InnerJoin.png)
+
+Example Left Join:
+
+**Table 1**
+
+  men     ID  
+ ------- ---- 
+  Boris   1   
+  Borg    2   
+  Biq     3   
+  Gries   4   
+
+**Table 2**
+
+  ID   Dept  
+ ---- ------ 
+  1    GOVT  
+  2    ORIE  
+  3    ORIE  
+  5    CS    
+  6    AEP   
+
+**Result of `T1 INNER JOIN T2 ON T1.ID = T2.ID`**
+
+  men   	  ID 	  Dept 	 
+ -------	 ----	 ------	 
+  Boris 	  1  	  GOVT 	 
+  Borg  	  2  	  ORIE 	 
+  Biq   	  3  	  ORIE 	 
+
+### Left Joins
+
+Diagram: 
+
+![](LeftJoin.png)
+
+Example Left Join:
+
+**Table 1**
+
+  men     ID  
+ ------- ---- 
+  Boris   1   
+  Borg    2   
+  Biq     3   
+  Gries   4   
+
+**Table 2**
+
+  ID   Dept  
+ ---- ------ 
+  1    GOVT  
+  2    ORIE  
+  3    ORIE  
+  5    CS    
+  6    AEP   
+
+**Result of `T1 LEFT JOIN T2 ON T1.ID = T2.ID`**
+
+  men   	  ID 	  Dept 	 
+ -------	 ----	 ------	 
+  Boris 	  1  	  GOVT 	 
+  Borg  	  2  	  ORIE 	 
+  Biq   	  3  	  ORIE 	 
+  Gries 	  4  	  NULL 	 
+
+
+### Right Joins
+
+**NOTE: Right Joins are NOT SUPPORTED on SQLite 3. Instead, use `FROM T2 LEFT JOIN T1`**.
+
+Diagram:
+
+![](RightJoin.png)
+
+Example Left Join:
+
+**Table 1**
+
+  men     ID  
+ ------- ---- 
+  Boris   1   
+  Borg    2   
+  Biq     3   
+  Gries   4   
+
+**Table 2**
+
+  ID   Dept  
+ ---- ------ 
+  1    GOVT  
+  2    ORIE  
+  3    ORIE  
+  5    CS    
+  6    AEP   
+
+
+**Result of `T1 RIGHT JOIN T2 ON T1.ID = T2.ID` or `T2 LEFT JOIN T1 ON T1.ID = T2.ID`**
+
+  men   	  ID 	  Dept 	 
+ -------	 ----	 ------	 
+  Boris 	  1  	  GOVT 	 
+  Borg  	  2  	  ORIE 	 
+  Biq   	  3  	  ORIE 	 
+  NULL  	  5  	  CS   	 
+  NULL  	  6  	  AEP  	 
+
+### Full Outer Joins
+
+Diagram:
+
+![](FullOuterJoin.png)
+
+Example Left Join:
+
+**Table 1**
+
+  men     ID  
+ ------- ---- 
+  Boris   1   
+  Borg    2   
+  Biq     3   
+  Gries   4   
+
+**Table 2**
+
+  ID   Dept  
+ ---- ------ 
+  1    GOVT  
+  2    ORIE  
+  3    ORIE  
+  5    CS    
+  6    AEP   
+
+**Result of `T1 FULL OUTER JOIN T2 ON T1.ID = T2.ID`**
+
+  men   	  ID 	  Dept 	 
+ -------	 ----	 ------	 
+  Boris 	  1  	  GOVT 	 
+  Borg  	  2  	  ORIE 	 
+  Biq   	  3  	  ORIE 	 
+  Gries 	  4  	  NULL 	 
+  NULL  	  5  	  CS   	 
+  NULL  	  6  	  AEP  	 
 
 ## Join Syntax
 
+### Syntax for Inner and Left Joins
+
+Example:
+
+```SQL
+SELCT field1, field2
+FROM TableA INNER JOIN TableB
+ON TableASharedColumn = TableBSharedColumn
+```
+
+This would return **only the records where this is the case** (that is, in this example, TableASharedColumn is equal to TableBSharedColumn). This differs from `LEFT JOIN` in that `LEFT JOIN` would return **all records from TableA and the records from TableB where this is the case**. That is, a `LEFT JOIN` will always return all of the records from the left argument, and will combine those with the records of TableB if there is a match. If there is not a match, `NULL` is returned. 
+
+### Syntax for Full Outer Joins
+
+Example:
+
+```SQL
+SELECT field1, field2
+FROM TableA LEFT JOIN TableB 
+ON TableASharedColumn = TableBSharedColumn
+UNION ALL 
+SELECT field1, field2
+FROM TableB LEFT JOIN TableA
+ON TableBSharedColumn = TableASharedColumn
+WHERE TableASharedColumn IS NULL
+```
 
 ## Multi-table Joins
 
+Example of a Multi-Table join:
+
+```SQL
+SELECT T1.ID, T1.a, T2.b, T3.c
+FROM T1 INNER JOIN T2
+ON T1.ID = T2.ID
+  INNER JOIN T3
+  ON T1.ID = T3.ID
+```
+
+This query is functionally equivalent to the following:
+
+```SQL
+...
+FROM T1, T2, T3
+WHERE T1.ID = T2.ID AND T1.ID = T3.ID
+```
 
 ## Self-joins
 
+Objective: Create a new table comparing values from a single table.
+
+Example: Comparing netIDs against each other to return the results each have in common (say, the classes students have in common)
+
+**Input table**
+
+  netID 	  class     	 
+ -------	 -----------	 
+  brg54 	  ORIE 3120 	 
+  brg54 	  ORIE 3510 	 
+  brg54 	  GOVT 3253 	 
+  bar94 	  MATH 3110 	 
+  bar94 	  ORIE 3120 	 
+  bar94 	  ORIE 3510 	 
+  zdk8  	  LGBT 6969 	 
+  zdk8  	  AEP 4200  	 
+  zdk8  	  ORIE 3510 	 
+
+**Output table**
+
+  netID1 	  netID2 	  class     	 
+ --------	 --------	 -----------	 
+  brg54  	  bar94  	  ORIE 3120 	 
+  brg54  	  bar94  	  ORIE 3510 	 
+  brg54  	  zdk8   	  ORIE 3510 	 
+  bar94  	  zdk8   	  ORIE 3510 	 
+  
+The query that produces the above results is as follows:
+
+```SQL
+SELECT 
+  Table1.netID AS netID1, 
+  Table2.netID AS netID2, 
+  Table1.class AS class
+FROM Table AS Table1 INNER JOIN Table AS Table2   -- inner joins Table with itself
+ON Table1.netID < Table2.netID                    -- removes "duplicates" (reversed-order ones)
+AND Table1.netID = Table2.netID                   -- where records are the same
+```
+
+To instead *rank* students, one might name the above Table2 "HigherNetID" (because it is greater) and in another view, add `COUNT(HigherNetID) AS Ranking` (because it counts all of the higher netIDs), and then `ORDER BY Ranking ASC` (to order the netIDs in ranking order).
 
 ## Misc. join-related functions
 
+  - LIMIT: `LIMIT n` limits the query to $n$ results
+  - CAST: `CAST(value AS float)` turns value into type `float`
 
 # Keys and Schema
 
 ## Primary and Foreign Keys
 
+A key is **referenced** in a **parent** table and **is referenced by** an element of a **child** table. 
+
+A **primary key** is the one that **gets referenced**; a **foreign key** is the one that is doing the **referencing**. 
+
+Example:
+
+**Table1**
+
+  Table1           	 
+ ------------------	 
+  **customerID**       	 
+  customerName     	 
+  customerMajor    	 
+  customerDickSize 	 
+
+**Table2**
+
+  Table2      	 
+ -------------	 
+  **orderID**  	 
+  customerID  	 
+  orderGirth  	 
+  orderColor  	 
+  myDongLongA 	 
+  babyA       	 
+
+In this table:
+
+  - **Table1.customerID and orderID are primary keys** (unique identifier, never `NULL`) 
+  - **Table2.customerID is a foreign key** (in one table, *references* another field)
+    - **Table2.customerID *references* Table1.customerID**
+      - Table2 is the child, Table2.customerID is the foreign key
+      - Table1 is the parent, Table1.customerID is the primary key
+      
+### Ones and Infinities, and Bolding
+
+We use a **1** to refer to a **primary key** and $\infty$ to refer to a **foreign key**.
+
+A primary key will always be unique in its own table; in other words, there will be only **1** of each. But each child table of a parent table can have $\infty$ occurrences of any of the primary keys within it. 
+
+For instance, there could be a table called "coaches" with columns "name" and "coachID", with primary key "coachID", and a table called "students" with columns "name" and "coachID", with foreign key "coachID". There could be infinite students, and each coachID could be referenced infinite ($\infty$) times from the "students" table; but each coach can only have one name, so there can only be **1** of each coachID in the "coaches" table.
+
+In the above example, with Table1 and Table2, we could draw a line from customerID in Table1 to customerID in Table2, with a **1** on the Table1 side and an $\infty$ on the Table2 side.
+
+Typically we **bold** (or underline) the primary key of a column when we write it out. This can be seen above in Table1 and Table2.
 
 ## Referential Integrity
 
+For a value to be **inserted** into the child table, a value in the parent must exist. In the above example with Table1 and Table2, for instance, we know that there must be a customerID in Table1 for every customerID in Table2. 
+
+For a value to be **removed** from the parent table, corresponding values must be removed from the child table. In the above example, for instance, to remove a customerID in Table1, all rows sharing that customerID must be removed from Table2 as well. 
 
 ## Schema Design
 
+Main ideas in Schema Design:
 
-
-
-
-
+  - **Avoid data duplication** (keys excluded)
+  - The **1** end of a relationship typically belongs to a primary key but can also simply signify a 1-1 relationship between tables.
+  - Pay attention to the relevance of **1**s and $\infty$s. See [here](https://hentai.foundation/ORIE3120/PrelimReview1/index.html#ones-and-infinities-and-bolding) for more details.
 
 
 

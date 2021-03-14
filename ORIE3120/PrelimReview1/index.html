@@ -1669,15 +1669,28 @@ pre code {
 </ul></li>
 <li><a href="#joins">Joins</a>
 <ul>
-<li><a href="#types-of-joins">Types of Joins</a></li>
-<li><a href="#join-syntax">Join Syntax</a></li>
+<li><a href="#types-of-joins">Types of Joins</a>
+<ul>
+<li><a href="#inner-joins">Inner Joins</a></li>
+<li><a href="#left-joins">Left Joins</a></li>
+<li><a href="#right-joins">Right Joins</a></li>
+<li><a href="#full-outer-joins">Full Outer Joins</a></li>
+</ul></li>
+<li><a href="#join-syntax">Join Syntax</a>
+<ul>
+<li><a href="#syntax-for-inner-and-left-joins">Syntax for Inner and Left Joins</a></li>
+<li><a href="#syntax-for-full-outer-joins">Syntax for Full Outer Joins</a></li>
+</ul></li>
 <li><a href="#multi-table-joins">Multi-table Joins</a></li>
 <li><a href="#self-joins">Self-joins</a></li>
 <li><a href="#misc.-join-related-functions">Misc. join-related functions</a></li>
 </ul></li>
 <li><a href="#keys-and-schema">Keys and Schema</a>
 <ul>
-<li><a href="#primary-and-foreign-keys">Primary and Foreign Keys</a></li>
+<li><a href="#primary-and-foreign-keys">Primary and Foreign Keys</a>
+<ul>
+<li><a href="#ones-and-infinities-and-bolding">Ones and Infinities, and Bolding</a></li>
+</ul></li>
 <li><a href="#referential-integrity">Referential Integrity</a></li>
 <li><a href="#schema-design">Schema Design</a></li>
 </ul></li>
@@ -1693,7 +1706,9 @@ pre code {
 <p>Example:</p>
 <pre class="sql"><code>SELECT columnName1, columnName2
 FROM tableName</code></pre>
+<blockquote>
 <p>Tip: <code>SELECT *</code> gives all columns</p>
+</blockquote>
 </div>
 <div id="where" class="section level3">
 <h3>WHERE</h3>
@@ -1733,6 +1748,7 @@ WHERE ( columnName1 IS 2014 OR 2015)
 </ul></li>
 <li>COUNT: <code>COUNT(column)</code> returns the number of entries in the column</li>
 <li>GROUP_CONCAT: <code>GROUP_CONCAT(col1, sep)</code> returns the concatenation of all non-null values in <code>col1</code>, separated by <code>sep</code>. If no separator is provided, “,” (comma) is used by default</li>
+<li>UNION and UNION ALL: <code>A UNION ALL B</code> returns all records from both A and B including duplicates; <code>A UNION B</code> returns all records from A and B and removes duplicates</li>
 </ul>
 <p>General example:</p>
 <pre class="sql"><code>SELECT MAX(tableName.col1)
@@ -1742,30 +1758,30 @@ FROM tableName</code></pre>
 <table>
 <thead>
 <tr class="header">
-<th>A</th>
-<th>B</th>
+<th align="center">A</th>
+<th align="center">B</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>1</td>
-<td>1</td>
+<td align="center">1</td>
+<td align="center">1</td>
 </tr>
 <tr class="even">
-<td>1</td>
-<td>2</td>
+<td align="center">1</td>
+<td align="center">2</td>
 </tr>
 <tr class="odd">
-<td>1</td>
-<td>3</td>
+<td align="center">1</td>
+<td align="center">3</td>
 </tr>
 <tr class="even">
-<td>2</td>
-<td>1</td>
+<td align="center">2</td>
+<td align="center">1</td>
 </tr>
 <tr class="odd">
-<td>3</td>
-<td>1</td>
+<td align="center">3</td>
+<td align="center">1</td>
 </tr>
 </tbody>
 </table>
@@ -1773,38 +1789,38 @@ FROM tableName</code></pre>
 <table>
 <thead>
 <tr class="header">
-<th>A</th>
-<th>SUM(B)</th>
-<th>AVG(B)</th>
-<th>MAX(B)</th>
-<th>MIN(B)</th>
-<th>GROUP_CONCAT(B)</th>
+<th align="center">A</th>
+<th align="center">SUM(B)</th>
+<th align="center">AVG(B)</th>
+<th align="center">MAX(B)</th>
+<th align="center">MIN(B)</th>
+<th align="center">GROUP_CONCAT(B)</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>1</td>
-<td>6</td>
-<td>2</td>
-<td>3</td>
-<td>1</td>
-<td>1,2,3</td>
+<td align="center">1</td>
+<td align="center">6</td>
+<td align="center">2</td>
+<td align="center">3</td>
+<td align="center">1</td>
+<td align="center">1,2,3</td>
 </tr>
 <tr class="even">
-<td>2</td>
-<td>1</td>
-<td>1</td>
-<td>1</td>
-<td>1</td>
-<td>1</td>
+<td align="center">2</td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">1</td>
 </tr>
 <tr class="odd">
-<td>3</td>
-<td>1</td>
-<td>1</td>
-<td>1</td>
-<td>1</td>
-<td>1</td>
+<td align="center">3</td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">1</td>
 </tr>
 </tbody>
 </table>
@@ -1846,7 +1862,9 @@ FROM tableName</code></pre>
 </tbody>
 </table>
 <p><code>LTRIM</code> trims all characters from the <strong>left</strong> that match the specification given as the second argument, and stops when it reaches a character not present in the given matching list.</p>
-<p>Tip: avoid using two <code>LTRIM</code> statements with <code>OR</code>:</p>
+<blockquote>
+<p>Tip: avoid using two <code>LTRIM</code> statements with <code>OR</code>, like so:</p>
+</blockquote>
 <pre class="sql"><code>LTRIM(data, &quot;A&quot; OR &quot;B&quot;)</code></pre>
 </div>
 <div id="rtrim" class="section level4">
@@ -1880,7 +1898,9 @@ FROM tableName</code></pre>
 </tbody>
 </table>
 <p><code>RTRIM</code> trims all characters from the <strong>right</strong> that match the specification given as the second argument, and stops when it reaches a character not present in the given matching list.</p>
+<blockquote>
 <p>Tip: in order to take “A” or “B” off of the back of a word, simply pass “AB” as the argument. If only one word ends in “AB”, just use a <code>CASE WHEN</code> statement to handle it.</p>
+</blockquote>
 </div>
 <div id="trim" class="section level4">
 <h4>TRIM</h4>
@@ -1902,26 +1922,26 @@ TRIM(&quot;131232323131231232312323h2uhu3h2313123123123123&quot;, &quot;123&quot
 <table>
 <thead>
 <tr class="header">
-<th>input</th>
-<th>output</th>
+<th align="center">input</th>
+<th align="center">output</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>10 boxes x 20 bags</td>
-<td>0 boxes</td>
+<td align="center">10 boxes x 20 bags</td>
+<td align="center">0 boxes</td>
 </tr>
 <tr class="even">
-<td>1 kg pkg.</td>
-<td>kg pkg.</td>
+<td align="center">1 kg pkg.</td>
+<td align="center">kg pkg.</td>
 </tr>
 <tr class="odd">
-<td>2 kg box</td>
-<td>kg box</td>
+<td align="center">2 kg box</td>
+<td align="center">kg box</td>
 </tr>
 <tr class="even">
-<td>24 - 12 oz bottles</td>
-<td>4 - 12 o</td>
+<td align="center">24 - 12 oz bottles</td>
+<td align="center">4 - 12 o</td>
 </tr>
 </tbody>
 </table>
@@ -1933,26 +1953,26 @@ TRIM(&quot;131232323131231232312323h2uhu3h2313123123123123&quot;, &quot;123&quot
 <table>
 <thead>
 <tr class="header">
-<th>input</th>
-<th>output</th>
+<th align="center">input</th>
+<th align="center">output</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>10 boxes x 20 bags</td>
-<td>gs</td>
+<td align="center">10 boxes x 20 bags</td>
+<td align="center">gs</td>
 </tr>
 <tr class="even">
-<td>1 kg pkg.</td>
-<td>g.</td>
+<td align="center">1 kg pkg.</td>
+<td align="center">g.</td>
 </tr>
 <tr class="odd">
-<td>2 kg box</td>
-<td>ox</td>
+<td align="center">2 kg box</td>
+<td align="center">ox</td>
 </tr>
 <tr class="even">
-<td>24 - 12 oz bottles</td>
-<td>es</td>
+<td align="center">24 - 12 oz bottles</td>
+<td align="center">es</td>
 </tr>
 </tbody>
 </table>
@@ -1964,9 +1984,9 @@ TRIM(&quot;131232323131231232312323h2uhu3h2313123123123123&quot;, &quot;123&quot
 <li>LENGTH: <code>LENGTH(column)</code> returns the length of each entry</li>
 <li>SUBSTR and LENGTH: <code>SUBSTR(columns, 1, LENGTH(columns)-1)</code> takes off the last letter of each word</li>
 </ul>
-<p><strong>String concatenation</strong> in SQLite takes the form of the <strong>concatenate operator</strong>, <code>||</code>. This is the same as the “or” operator in Java.</p>
+<p><strong>String concatenation</strong> in SQLite takes the form of the <strong>concatenate operator</strong>, <code></code>. This is the same as the “or” operator in Java.</p>
 <p>Example:</p>
-<pre class="sql"><code>name1 || name2  -- this returns &quot;name1name2&quot;</code></pre>
+<pre class="sql"><code>name1    name2  -- this returns &quot;name1name2&quot;</code></pre>
 </div>
 </div>
 <div id="case-when-as" class="section level2">
@@ -1978,7 +1998,9 @@ WHEN SUBSTR(column, 1, 2) = &quot;B&quot; THEN &quot;Konkey Dong&quot;
 ELSE column END AS colnew</code></pre>
 <p>A <code>CASE WHEN</code> statement starts with <code>CASE WHEN</code>. Then, we check against some number of conditions with the above-demonstrated syntax; after each <code>WHEN</code> there is a logical expression whose validity we check. If this expression evaluates to false, we continue; otherwise, we go to the <code>THEN</code> portion and set our value to the value specified therein.</p>
 <p>The <code>END AS</code> portion tells the <code>CASE WHEN</code> statement that it is done (the <code>END</code> part), and that this column should be called “colnew” (the <code>AS</code> portion).</p>
+<blockquote>
 <p>Tip: we can also use <code>NULL</code> as a general <code>ELSE</code>, as nothing is equal to <code>NULL</code> for any comparison operator.</p>
+</blockquote>
 <p>A more common use of the <code>AS</code> keyword is in naming columns while selecting them, as in this example:</p>
 <pre class="sql"><code>SELECT coluumn1, newcol1, newcol2, newcol3
 FROM (
@@ -1991,7 +2013,9 @@ FROM (
     year IS 2014 AND
     column1 IS NOT NULL
 )</code></pre>
+<blockquote>
 <p>Tip: remember to include the commas! They are a huge fucking pain in the ass to troubleshoot.</p>
+</blockquote>
 </div>
 <div id="using-the-text-editor" class="section level2">
 <h2>Using the Text Editor</h2>
@@ -2008,11 +2032,15 @@ WHERE country = &quot;Stan&quot; OR country = &quot;Stan2&quot;</code></pre>
 <pre class="sql"><code>SELECT UnitPrice, ProductName
 FROM UnitPrice
 ORDER BY UnitPrice DESC</code></pre>
+<blockquote>
 <p>Tip: use <code>DESC</code> to order from “greatest” to “lowest” (or in reverse alphabetical order for strings); use <code>ASC</code> to do the opposite.</p>
+</blockquote>
 <pre class="sql"><code>SELECT UnitPrice, ProductName, UnitPrice * ProductName
 FROM Products
 ORDER BY UnitsInStock * UnitPrice DESC</code></pre>
+<blockquote>
 <p>Tip: instead of using the name of the column, we can also use the index of the column in the table. For instance, if UnitsInStock was the 5th column, we could have instead written <code>...ORDER BY 5 * UnitPrice DESC</code>.</p>
+</blockquote>
 <pre class="sql"><code>SELECT ProductsA, UnitPrice, ProductsA * UnitPrice AS InValue
 FROM Products
 ORDER BY InValue DESC</code></pre>
@@ -2036,34 +2064,34 @@ ORDER BY 2 ASC, 1 DESC</code></pre>
 <table>
 <thead>
 <tr class="header">
-<th>col1</th>
-<th>col2</th>
+<th align="center">col1</th>
+<th align="center">col2</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>1</td>
-<td>7</td>
+<td align="center">1</td>
+<td align="center">7</td>
 </tr>
 <tr class="even">
-<td>1</td>
-<td>8</td>
+<td align="center">1</td>
+<td align="center">8</td>
 </tr>
 <tr class="odd">
-<td>3</td>
-<td>9</td>
+<td align="center">3</td>
+<td align="center">9</td>
 </tr>
 <tr class="even">
-<td>3</td>
-<td>4</td>
+<td align="center">3</td>
+<td align="center">4</td>
 </tr>
 <tr class="odd">
-<td>3</td>
-<td>8</td>
+<td align="center">3</td>
+<td align="center">8</td>
 </tr>
 <tr class="even">
-<td>6</td>
-<td>3</td>
+<td align="center">6</td>
+<td align="center">3</td>
 </tr>
 </tbody>
 </table>
@@ -2071,22 +2099,22 @@ ORDER BY 2 ASC, 1 DESC</code></pre>
 <table>
 <thead>
 <tr class="header">
-<th>col1</th>
-<th>col2</th>
+<th align="center">col1</th>
+<th align="center">col2</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>1</td>
-<td>15</td>
+<td align="center">1</td>
+<td align="center">15</td>
 </tr>
 <tr class="even">
-<td>3</td>
-<td>21</td>
+<td align="center">3</td>
+<td align="center">21</td>
 </tr>
 <tr class="odd">
-<td>6</td>
-<td>3</td>
+<td align="center">6</td>
+<td align="center">3</td>
 </tr>
 </tbody>
 </table>
@@ -2140,19 +2168,22 @@ HAVING SUM(cat1) &gt; 5</code></pre>
 <p>Example table updating (row adding):</p>
 <pre class="sql"><code>INSERT INTO poverty
   SELECT 
-    columnName || &quot;E&quot;,       -- appends &quot;E&quot; to columnName
-    &quot;Epified&quot; || country,   -- prepends &quot;E&quot; to country
+    columnName    &quot;E&quot;,       -- appends &quot;E&quot; to columnName
+    &quot;Epified&quot;    country,   -- prepends &quot;E&quot; to country
     n_poverty_190 + 100,    -- adds 100 to n_poverty_190
     n_poverty_320 + 101,
     n_poverty_550 + 17,
     population
   FROM poverty</code></pre>
-<p>The above example creates the new observations columnName || “E”, “Epified” || country, etc. and adds them to the poverty database.</p>
+<p>The above example creates the new observations columnName “E”, “Epified” country, etc. and adds them to the poverty database.</p>
 <p>Example table updating (altering):</p>
 <pre><code>UPDATE poverty SET 
   columnName = &quot;Barkachistan&quot;
 WHERE n_poverty_190 &gt; 0.3</code></pre>
 <p>The above example sets the values of columnName to “Barkachistan” if n_poverty_190 is above 0.3.</p>
+<blockquote>
+<p>Tip: if you want to create a table with a name that is a keyword, you need to escape it with either brackets (<code>[keyword]</code>) or quotes (<code>&quot;keyword&quot;</code>). SQLite documentation recommends the use of quotes over brackets, since quotes are standard SQL.</p>
+</blockquote>
 </div>
 </div>
 <div id="aggregates" class="section level2">
@@ -2165,61 +2196,664 @@ AS counter</code></pre>
 <table>
 <thead>
 <tr class="header">
-<th>1</th>
-<th>2</th>
+<th align="center">1</th>
+<th align="center">2</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>c1a</td>
-<td>c2a</td>
+<td align="center">c1a</td>
+<td align="center">c2a</td>
 </tr>
 <tr class="even">
-<td>c1a</td>
-<td>c2b</td>
+<td align="center">c1a</td>
+<td align="center">c2b</td>
 </tr>
 <tr class="odd">
-<td>c1b</td>
-<td>c2a</td>
+<td align="center">c1b</td>
+<td align="center">c2a</td>
 </tr>
 <tr class="even">
-<td>c1b</td>
-<td>c2b</td>
+<td align="center">c1b</td>
+<td align="center">c2b</td>
 </tr>
 </tbody>
 </table>
 <p>This groups by both categories. Note that grouping by every column is like no grouping at all.</p>
+<blockquote>
 <p>Tip: <code>MIN(text_field)</code> selects text that would appear first if the column were ordered by <code>ASC</code> (ascending alphabetically).</p>
+</blockquote>
 </div>
 </div>
 <div id="joins" class="section level1">
 <h1>Joins</h1>
 <div id="types-of-joins" class="section level2">
 <h2>Types of Joins</h2>
+<p>There are four main types of joins: Inner Joins, Left Joins, Right Join, and Full Outer Joins. Venn Diagrams follow for each.</p>
+<div id="inner-joins" class="section level3">
+<h3>Inner Joins</h3>
+<p>Diagram:</p>
+<p><img src="data:image/png;base64,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" /></p>
+<p>Example Left Join:</p>
+<p><strong>Table 1</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th align="center">men</th>
+<th align="center">ID</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">Boris</td>
+<td align="center">1</td>
+</tr>
+<tr class="even">
+<td align="center">Borg</td>
+<td align="center">2</td>
+</tr>
+<tr class="odd">
+<td align="center">Biq</td>
+<td align="center">3</td>
+</tr>
+<tr class="even">
+<td align="center">Gries</td>
+<td align="center">4</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Table 2</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th align="center">ID</th>
+<th align="center">Dept</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">1</td>
+<td align="center">GOVT</td>
+</tr>
+<tr class="even">
+<td align="center">2</td>
+<td align="center">ORIE</td>
+</tr>
+<tr class="odd">
+<td align="center">3</td>
+<td align="center">ORIE</td>
+</tr>
+<tr class="even">
+<td align="center">5</td>
+<td align="center">CS</td>
+</tr>
+<tr class="odd">
+<td align="center">6</td>
+<td align="center">AEP</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Result of <code>T1 INNER JOIN T2 ON T1.ID = T2.ID</code></strong></p>
+<table>
+<thead>
+<tr class="header">
+<th align="center">men</th>
+<th align="center">ID</th>
+<th align="center">Dept</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">Boris</td>
+<td align="center">1</td>
+<td align="center">GOVT</td>
+</tr>
+<tr class="even">
+<td align="center">Borg</td>
+<td align="center">2</td>
+<td align="center">ORIE</td>
+</tr>
+<tr class="odd">
+<td align="center">Biq</td>
+<td align="center">3</td>
+<td align="center">ORIE</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="left-joins" class="section level3">
+<h3>Left Joins</h3>
+<p>Diagram:</p>
+<p><img src="data:image/png;base64,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" /></p>
+<p>Example Left Join:</p>
+<p><strong>Table 1</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th align="center">men</th>
+<th align="center">ID</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">Boris</td>
+<td align="center">1</td>
+</tr>
+<tr class="even">
+<td align="center">Borg</td>
+<td align="center">2</td>
+</tr>
+<tr class="odd">
+<td align="center">Biq</td>
+<td align="center">3</td>
+</tr>
+<tr class="even">
+<td align="center">Gries</td>
+<td align="center">4</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Table 2</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th align="center">ID</th>
+<th align="center">Dept</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">1</td>
+<td align="center">GOVT</td>
+</tr>
+<tr class="even">
+<td align="center">2</td>
+<td align="center">ORIE</td>
+</tr>
+<tr class="odd">
+<td align="center">3</td>
+<td align="center">ORIE</td>
+</tr>
+<tr class="even">
+<td align="center">5</td>
+<td align="center">CS</td>
+</tr>
+<tr class="odd">
+<td align="center">6</td>
+<td align="center">AEP</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Result of <code>T1 LEFT JOIN T2 ON T1.ID = T2.ID</code></strong></p>
+<table>
+<thead>
+<tr class="header">
+<th align="center">men</th>
+<th align="center">ID</th>
+<th align="center">Dept</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">Boris</td>
+<td align="center">1</td>
+<td align="center">GOVT</td>
+</tr>
+<tr class="even">
+<td align="center">Borg</td>
+<td align="center">2</td>
+<td align="center">ORIE</td>
+</tr>
+<tr class="odd">
+<td align="center">Biq</td>
+<td align="center">3</td>
+<td align="center">ORIE</td>
+</tr>
+<tr class="even">
+<td align="center">Gries</td>
+<td align="center">4</td>
+<td align="center">NULL</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="right-joins" class="section level3">
+<h3>Right Joins</h3>
+<p><strong>NOTE: Right Joins are NOT SUPPORTED on SQLite 3. Instead, use <code>FROM T2 LEFT JOIN T1</code></strong>.</p>
+<p>Diagram:</p>
+<p><img src="data:image/png;base64,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" /></p>
+<p>Example Left Join:</p>
+<p><strong>Table 1</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th align="center">men</th>
+<th align="center">ID</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">Boris</td>
+<td align="center">1</td>
+</tr>
+<tr class="even">
+<td align="center">Borg</td>
+<td align="center">2</td>
+</tr>
+<tr class="odd">
+<td align="center">Biq</td>
+<td align="center">3</td>
+</tr>
+<tr class="even">
+<td align="center">Gries</td>
+<td align="center">4</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Table 2</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th align="center">ID</th>
+<th align="center">Dept</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">1</td>
+<td align="center">GOVT</td>
+</tr>
+<tr class="even">
+<td align="center">2</td>
+<td align="center">ORIE</td>
+</tr>
+<tr class="odd">
+<td align="center">3</td>
+<td align="center">ORIE</td>
+</tr>
+<tr class="even">
+<td align="center">5</td>
+<td align="center">CS</td>
+</tr>
+<tr class="odd">
+<td align="center">6</td>
+<td align="center">AEP</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Result of <code>T1 RIGHT JOIN T2 ON T1.ID = T2.ID</code> or <code>T2 LEFT JOIN T1 ON T1.ID = T2.ID</code></strong></p>
+<table>
+<thead>
+<tr class="header">
+<th align="center">men</th>
+<th align="center">ID</th>
+<th align="center">Dept</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">Boris</td>
+<td align="center">1</td>
+<td align="center">GOVT</td>
+</tr>
+<tr class="even">
+<td align="center">Borg</td>
+<td align="center">2</td>
+<td align="center">ORIE</td>
+</tr>
+<tr class="odd">
+<td align="center">Biq</td>
+<td align="center">3</td>
+<td align="center">ORIE</td>
+</tr>
+<tr class="even">
+<td align="center">NULL</td>
+<td align="center">5</td>
+<td align="center">CS</td>
+</tr>
+<tr class="odd">
+<td align="center">NULL</td>
+<td align="center">6</td>
+<td align="center">AEP</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="full-outer-joins" class="section level3">
+<h3>Full Outer Joins</h3>
+<p>Diagram:</p>
+<p><img src="data:image/png;base64,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" /></p>
+<p>Example Left Join:</p>
+<p><strong>Table 1</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th align="center">men</th>
+<th align="center">ID</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">Boris</td>
+<td align="center">1</td>
+</tr>
+<tr class="even">
+<td align="center">Borg</td>
+<td align="center">2</td>
+</tr>
+<tr class="odd">
+<td align="center">Biq</td>
+<td align="center">3</td>
+</tr>
+<tr class="even">
+<td align="center">Gries</td>
+<td align="center">4</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Table 2</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th align="center">ID</th>
+<th align="center">Dept</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">1</td>
+<td align="center">GOVT</td>
+</tr>
+<tr class="even">
+<td align="center">2</td>
+<td align="center">ORIE</td>
+</tr>
+<tr class="odd">
+<td align="center">3</td>
+<td align="center">ORIE</td>
+</tr>
+<tr class="even">
+<td align="center">5</td>
+<td align="center">CS</td>
+</tr>
+<tr class="odd">
+<td align="center">6</td>
+<td align="center">AEP</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Result of <code>T1 FULL OUTER JOIN T2 ON T1.ID = T2.ID</code></strong></p>
+<table>
+<thead>
+<tr class="header">
+<th align="center">men</th>
+<th align="center">ID</th>
+<th align="center">Dept</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">Boris</td>
+<td align="center">1</td>
+<td align="center">GOVT</td>
+</tr>
+<tr class="even">
+<td align="center">Borg</td>
+<td align="center">2</td>
+<td align="center">ORIE</td>
+</tr>
+<tr class="odd">
+<td align="center">Biq</td>
+<td align="center">3</td>
+<td align="center">ORIE</td>
+</tr>
+<tr class="even">
+<td align="center">Gries</td>
+<td align="center">4</td>
+<td align="center">NULL</td>
+</tr>
+<tr class="odd">
+<td align="center">NULL</td>
+<td align="center">5</td>
+<td align="center">CS</td>
+</tr>
+<tr class="even">
+<td align="center">NULL</td>
+<td align="center">6</td>
+<td align="center">AEP</td>
+</tr>
+</tbody>
+</table>
+</div>
 </div>
 <div id="join-syntax" class="section level2">
 <h2>Join Syntax</h2>
+<div id="syntax-for-inner-and-left-joins" class="section level3">
+<h3>Syntax for Inner and Left Joins</h3>
+<p>Example:</p>
+<pre class="sql"><code>SELCT field1, field2
+FROM TableA INNER JOIN TableB
+ON TableASharedColumn = TableBSharedColumn</code></pre>
+<p>This would return <strong>only the records where this is the case</strong> (that is, in this example, TableASharedColumn is equal to TableBSharedColumn). This differs from <code>LEFT JOIN</code> in that <code>LEFT JOIN</code> would return <strong>all records from TableA and the records from TableB where this is the case</strong>. That is, a <code>LEFT JOIN</code> will always return all of the records from the left argument, and will combine those with the records of TableB if there is a match. If there is not a match, <code>NULL</code> is returned.</p>
+</div>
+<div id="syntax-for-full-outer-joins" class="section level3">
+<h3>Syntax for Full Outer Joins</h3>
+<p>Example:</p>
+<pre class="sql"><code>SELECT field1, field2
+FROM TableA LEFT JOIN TableB 
+ON TableASharedColumn = TableBSharedColumn
+UNION ALL 
+SELECT field1, field2
+FROM TableB LEFT JOIN TableA
+ON TableBSharedColumn = TableASharedColumn
+WHERE TableASharedColumn IS NULL</code></pre>
+</div>
 </div>
 <div id="multi-table-joins" class="section level2">
 <h2>Multi-table Joins</h2>
+<p>Example of a Multi-Table join:</p>
+<pre class="sql"><code>SELECT T1.ID, T1.a, T2.b, T3.c
+FROM T1 INNER JOIN T2
+ON T1.ID = T2.ID
+  INNER JOIN T3
+  ON T1.ID = T3.ID</code></pre>
+<p>This query is functionally equivalent to the following:</p>
+<pre class="sql"><code>...
+FROM T1, T2, T3
+WHERE T1.ID = T2.ID AND T1.ID = T3.ID</code></pre>
 </div>
 <div id="self-joins" class="section level2">
 <h2>Self-joins</h2>
+<p>Objective: Create a new table comparing values from a single table.</p>
+<p>Example: Comparing netIDs against each other to return the results each have in common (say, the classes students have in common)</p>
+<p><strong>Input table</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th align="center">netID</th>
+<th align="center">class</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">brg54</td>
+<td align="center">ORIE 3120</td>
+</tr>
+<tr class="even">
+<td align="center">brg54</td>
+<td align="center">ORIE 3510</td>
+</tr>
+<tr class="odd">
+<td align="center">brg54</td>
+<td align="center">GOVT 3253</td>
+</tr>
+<tr class="even">
+<td align="center">bar94</td>
+<td align="center">MATH 3110</td>
+</tr>
+<tr class="odd">
+<td align="center">bar94</td>
+<td align="center">ORIE 3120</td>
+</tr>
+<tr class="even">
+<td align="center">bar94</td>
+<td align="center">ORIE 3510</td>
+</tr>
+<tr class="odd">
+<td align="center">zdk8</td>
+<td align="center">LGBT 6969</td>
+</tr>
+<tr class="even">
+<td align="center">zdk8</td>
+<td align="center">AEP 4200</td>
+</tr>
+<tr class="odd">
+<td align="center">zdk8</td>
+<td align="center">ORIE 3510</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Output table</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th align="center">netID1</th>
+<th align="center">netID2</th>
+<th align="center">class</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">brg54</td>
+<td align="center">bar94</td>
+<td align="center">ORIE 3120</td>
+</tr>
+<tr class="even">
+<td align="center">brg54</td>
+<td align="center">bar94</td>
+<td align="center">ORIE 3510</td>
+</tr>
+<tr class="odd">
+<td align="center">brg54</td>
+<td align="center">zdk8</td>
+<td align="center">ORIE 3510</td>
+</tr>
+<tr class="even">
+<td align="center">bar94</td>
+<td align="center">zdk8</td>
+<td align="center">ORIE 3510</td>
+</tr>
+</tbody>
+</table>
+<p>The query that produces the above results is as follows:</p>
+<pre class="sql"><code>SELECT 
+  Table1.netID AS netID1, 
+  Table2.netID AS netID2, 
+  Table1.class AS class
+FROM Table AS Table1 INNER JOIN Table AS Table2   -- inner joins Table with itself
+ON Table1.netID &lt; Table2.netID                    -- removes &quot;duplicates&quot; (reversed-order ones)
+AND Table1.netID = Table2.netID                   -- where records are the same</code></pre>
+<p>To instead <em>rank</em> students, one might name the above Table2 “HigherNetID” (because it is greater) and in another view, add <code>COUNT(HigherNetID) AS Ranking</code> (because it counts all of the higher netIDs), and then <code>ORDER BY Ranking ASC</code> (to order the netIDs in ranking order).</p>
 </div>
 <div id="misc.-join-related-functions" class="section level2">
 <h2>Misc. join-related functions</h2>
+<ul>
+<li>LIMIT: <code>LIMIT n</code> limits the query to <span class="math inline">\(n\)</span> results</li>
+<li>CAST: <code>CAST(value AS float)</code> turns value into type <code>float</code></li>
+</ul>
 </div>
 </div>
 <div id="keys-and-schema" class="section level1">
 <h1>Keys and Schema</h1>
 <div id="primary-and-foreign-keys" class="section level2">
 <h2>Primary and Foreign Keys</h2>
+<p>A key is <strong>referenced</strong> in a <strong>parent</strong> table and <strong>is referenced by</strong> an element of a <strong>child</strong> table.</p>
+<p>A <strong>primary key</strong> is the one that <strong>gets referenced</strong>; a <strong>foreign key</strong> is the one that is doing the <strong>referencing</strong>.</p>
+<p>Example:</p>
+<p><strong>Table1</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th align="center">Table1</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><strong>customerID</strong></td>
+</tr>
+<tr class="even">
+<td align="center">customerName</td>
+</tr>
+<tr class="odd">
+<td align="center">customerMajor</td>
+</tr>
+<tr class="even">
+<td align="center">customerDickSize</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Table2</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th align="center">Table2</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><strong>orderID</strong></td>
+</tr>
+<tr class="even">
+<td align="center">customerID</td>
+</tr>
+<tr class="odd">
+<td align="center">orderGirth</td>
+</tr>
+<tr class="even">
+<td align="center">orderColor</td>
+</tr>
+<tr class="odd">
+<td align="center">myDongLongA</td>
+</tr>
+<tr class="even">
+<td align="center">babyA</td>
+</tr>
+</tbody>
+</table>
+<p>In this table:</p>
+<ul>
+<li><strong>Table1.customerID and orderID are primary keys</strong> (unique identifier, never <code>NULL</code>)</li>
+<li><strong>Table2.customerID is a foreign key</strong> (in one table, <em>references</em> another field)
+<ul>
+<li><strong>Table2.customerID <em>references</em> Table1.customerID</strong>
+<ul>
+<li>Table2 is the child, Table2.customerID is the foreign key</li>
+<li>Table1 is the parent, Table1.customerID is the primary key</li>
+</ul></li>
+</ul></li>
+</ul>
+<div id="ones-and-infinities-and-bolding" class="section level3">
+<h3>Ones and Infinities, and Bolding</h3>
+<p>We use a <strong>1</strong> to refer to a <strong>primary key</strong> and <span class="math inline">\(\infty\)</span> to refer to a <strong>foreign key</strong>.</p>
+<p>A primary key will always be unique in its own table; in other words, there will be only <strong>1</strong> of each. But each child table of a parent table can have <span class="math inline">\(\infty\)</span> occurrences of any of the primary keys within it.</p>
+<p>For instance, there could be a table called “coaches” with columns “name” and “coachID”, with primary key “coachID”, and a table called “students” with columns “name” and “coachID”, with foreign key “coachID”. There could be infinite students, and each coachID could be referenced infinite (<span class="math inline">\(\infty\)</span>) times from the “students” table; but each coach can only have one name, so there can only be <strong>1</strong> of each coachID in the “coaches” table.</p>
+<p>In the above example, with Table1 and Table2, we could draw a line from customerID in Table1 to customerID in Table2, with a <strong>1</strong> on the Table1 side and an <span class="math inline">\(\infty\)</span> on the Table2 side.</p>
+<p>Typically we <strong>bold</strong> (or underline) the primary key of a column when we write it out. This can be seen above in Table1 and Table2.</p>
+</div>
 </div>
 <div id="referential-integrity" class="section level2">
 <h2>Referential Integrity</h2>
+<p>For a value to be <strong>inserted</strong> into the child table, a value in the parent must exist. In the above example with Table1 and Table2, for instance, we know that there must be a customerID in Table1 for every customerID in Table2.</p>
+<p>For a value to be <strong>removed</strong> from the parent table, corresponding values must be removed from the child table. In the above example, for instance, to remove a customerID in Table1, all rows sharing that customerID must be removed from Table2 as well.</p>
 </div>
 <div id="schema-design" class="section level2">
 <h2>Schema Design</h2>
+<p>Main ideas in Schema Design:</p>
+<ul>
+<li><strong>Avoid data duplication</strong> (keys excluded)</li>
+<li>The <strong>1</strong> end of a relationship typically belongs to a primary key but can also simply signify a 1-1 relationship between tables.</li>
+<li>Pay attention to the relevance of <strong>1</strong>s and <span class="math inline">\(\infty\)</span>s. See <a href="https://hentai.foundation/ORIE3120/PrelimReview1/index.html#ones-and-infinities-and-bolding">here</a> for more details.</li>
+</ul>
 </div>
 </div>
 
