@@ -1,0 +1,72 @@
+---
+title: Ideal ORIE major schedules
+author: The Hentai Foundation
+date: \today
+output:
+        html_document:
+                df_print: paged
+        pdf_document:
+                includes:
+                        in_header: ~/.preamble.tex
+                latex_engine: xelatex
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(reticulate)
+use_python("/usr/bin/python3")
+```
+
+## 3-year plan (not necessarily feasible given spring/fall constraints)
+
+| First Year | | Second Year | | Third Year |
+|-|-|-|-|-|
+|CS 1110\*\* | ENGRD 2110\* | CS 3110 | CS 4820 | ORIE 4741 | MATH 4550 | 
+|MATH 1920\*\*| MATH 2940| MATH 3040|MATH 3110\*|ORIE 4350| MATH 3360|
+|ENGRD 2700| ORIE 3120| ORIE 3300| ORIE 3310| ORIE 4330| MATH 4410|
+|ENGRI 1101| ORIE 3500| ORIE 3510| ORIE 4580| ORIE 4140| MATH 4330|
+|PE (2) | CS 4090 | CS 4090 | CS 4090 | CS 3152 | CS 4152|
+
+\* = can take honors instead
+
+\*\* = can get out of with CASE or AP exam
+
+## 2-year plan (more feasible but more impossible)
+
+ - Get AP credit for:
+   - 1112, 2213, 1910, macro/micro econ, 2090, AP Lit
+ - Summer internships:
+   - Freshman summer: Works at Optiver in Chicago
+   - Sophomore summer: Works at Goldman Sachs in NYC, investment banking, 150-hour work week
+ - Preparation for Freshman year:
+   - 2700 over the summer
+   - 1920 over the summer (CASE)
+   - 1110 -- case (not AP because of AP credit limit)
+
+| Freshman Fall | Freshman Winter | Freshman Spring | Freshman Summer | Sophomore Fall | Sophomore Winter | Sophomore Spring | 
+|-|-|-|-|-|-|-|
+| ORIE 3500 | ENGRC 3500 | ORIE 3510 | Greek Myths | ORIE 3300 | ANTH 1300 | ORIE 3310 | 
+| ENGRI 1101| | CS 2802 | CS 4820 | ORIE 4580 | | ORIE 6510 | 
+|MATH 2940 | | ORIE 3120 | | MATH 4550 | | ORIE 6340 | 
+|CS 2112 | | CS 3110 | | MATH 4130 | | ORIE 4740 | 
+| ECON 3030| | MATH 2930 | | CS 4090 (4820) | | FGSS 6990 | 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
