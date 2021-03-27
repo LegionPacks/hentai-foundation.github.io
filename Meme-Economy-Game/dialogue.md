@@ -1,7 +1,6 @@
 ---
 title: Dialogue
 author: thief#0001
-date: 3/27/2020
 toc: true
 ---
 
